@@ -1,7 +1,9 @@
 package com.cursodevsuperior.dscommerce.controllers;
 
+import com.cursodevsuperior.dscommerce.dto.CustomError;
 import com.cursodevsuperior.dscommerce.dto.ProductDTO;
 import com.cursodevsuperior.dscommerce.services.ProductService;
+import com.cursodevsuperior.dscommerce.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.List;
 
 
@@ -23,9 +26,8 @@ public class ProductController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> findById(@PathVariable Long id){
-        ProductDTO dto = service.findById(id);
-        return ResponseEntity.ok(dto);
-
+           ProductDTO dto = service.findById(id);
+           return ResponseEntity.ok(dto);
     }
 
     @GetMapping
@@ -37,12 +39,13 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto){
         dto = service.insert(dto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         service.delete(id);
         return  ResponseEntity.noContent().build();
 
