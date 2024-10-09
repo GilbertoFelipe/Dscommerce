@@ -19,7 +19,6 @@ public class User implements UserDetails {
 
     @Column(unique = true)
     private String email;
-
     private String phone;
     private LocalDate birthDate;
     private String password;
@@ -125,6 +124,15 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    public boolean hasRole(String roleName) {
+        for (Role role : roles) {
+            if (role.getAuthority().equals(roleName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
